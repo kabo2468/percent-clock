@@ -1,5 +1,5 @@
 let dateDiff, updateOffset, nowDate, updateFreq = 500;
-function formatDate(date) {
+const formatDate = date => {
 	'use strict';
 	const y = date.getFullYear();
 	const m = date.getMonth() + 1;
@@ -8,21 +8,21 @@ function formatDate(date) {
 	const min = date.getMinutes();
 	const sec = date.getSeconds();
 	return `${y}年${m}月${d}日 ${h}時${String(min).padStart(2, '0')}分${String(sec).padStart(2, '0')}秒`;
-}
+};
 // 1年何日か
-function getDaysLeapYear(year) {
+const getDaysLeapYear = year => {
     if (year < 4) return 365;
     return year%4 === 0 && year%100 !== 0 || year%400 === 0 ? 366 : 365;
-}
+};
 // 1世紀何日か
-function getDaysCentury(century) {
+const getDaysCentury = century => {
     const startDate = new Date((century - 1) * 100 + 1, 1, 1);
     const endDate = new Date(century * 100 + 1, 1, 1);
     const ds = endDate - startDate;
     return ds / 1000 / 60 / 60 / 24;
-}
+};
 // 時間合わせ
-function getDateOffset() {
+const getDateOffset = () => {
 	'use strict';
 	const localDate = Date.now();
 	$.ajax({
@@ -37,9 +37,14 @@ function getDateOffset() {
 			dateDiff = 0;
 		});
 	updateOffset = true;
-}
+};
+const setValue = (id, val) => {
+    $(`#${id}`).attr('aria-valuenow', val * 100);
+    $(`#${id}`).css('width', `${val * 100}%`);
+    $(`#${id}`).text(`${(val * 100).toFixed(2)} %`);
+};
 // ループ
-function clock() {
+const clock = () => {
 	'use strict';
 	nowDate = new Date(Date.now() + dateDiff);
 
@@ -73,30 +78,16 @@ function clock() {
     const centDays = ds / 1000 / 60 / 60 / 24;
     const century = centDays / getDaysCentury(Math.floor((nowDate.getFullYear() + 99) / 100));
 
-    $('#minute').attr('aria-valuenow', min * 100);
-    $('#minute').css('width', `${min * 100}%`);
-    $('#minute').text(`${(min * 100).toFixed(2)} %`);
-    $('#hour').attr('aria-valuenow', hour * 100);
-    $('#hour').css('width', `${hour * 100}%`);
-    $('#hour').text(`${(hour * 100).toFixed(2)} %`);
-    $('#day').attr('aria-valuenow', day * 100);
-    $('#day').css('width', `${day * 100}%`);
-    $('#day').text(`${(day * 100).toFixed(2)} %`);
-    $('#week').attr('aria-valuenow', week * 100);
-    $('#week').css('width', `${week * 100}%`);
-    $('#week').text(`${(week * 100).toFixed(2)} %`);
-    $('#month').attr('aria-valuenow', month * 100);
-    $('#month').css('width', `${month * 100}%`);
-    $('#month').text(`${(month * 100).toFixed(2)} %`);
-    $('#year').attr('aria-valuenow', year * 100);
-    $('#year').css('width', `${year * 100}%`);
-    $('#year').text(`${(year * 100).toFixed(2)} %`);
-    $('#century').attr('aria-valuenow', century * 100);
-    $('#century').css('width', `${century * 100}%`);
-    $('#century').text(`${(century * 100).toFixed(2)} %`);
+    setValue('minute', min);
+    setValue('hour', hour);
+    setValue('day', day);
+    setValue('week', week);
+    setValue('month', month);
+    setValue('year', year);
+    setValue('century', century);
 
 	setTimeout(clock, updateFreq);
-}
+};
 
 (() => {
     'use strict';
