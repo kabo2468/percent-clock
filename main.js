@@ -11,15 +11,15 @@ const formatDate = date => {
 };
 // 1年何日か
 const getDaysLeapYear = year => {
-    if (year < 4) return 365;
-    return year%4 === 0 && year%100 !== 0 || year%400 === 0 ? 366 : 365;
+	if (year < 4) return 365;
+	return year%4 === 0 && year%100 !== 0 || year%400 === 0 ? 366 : 365;
 };
 // 1世紀何日か
 const getDaysCentury = century => {
-    const startDate = new Date((century - 1) * 100 + 1, 1, 1);
-    const endDate = new Date(century * 100 + 1, 1, 1);
-    const ds = endDate - startDate;
-    return ds / 1000 / 60 / 60 / 24;
+	const startDate = new Date((century - 1) * 100 + 1, 1, 1);
+	const endDate = new Date(century * 100 + 1, 1, 1);
+	const ds = endDate - startDate;
+	return ds / 1000 / 60 / 60 / 24;
 };
 // 時間合わせ
 const getDateOffset = () => {
@@ -39,9 +39,9 @@ const getDateOffset = () => {
 	updateOffset = true;
 };
 const setValue = (id, val) => {
-    $(`#${id}`).attr('aria-valuenow', val * 100);
-    $(`#${id}`).css('width', `${val * 100}%`);
-    $(`#${id}`).text(`${(val * 100).toFixed(2)} %`);
+	$(`#${id}`).attr('aria-valuenow', val * 100);
+	$(`#${id}`).css('width', `${val * 100}%`);
+	$(`#${id}`).text(`${(val * 100).toFixed(2)} %`);
 };
 // ループ
 const clock = () => {
@@ -58,46 +58,52 @@ const clock = () => {
 		}
 	} else {
 		updateOffset = false;
-    }
-    
-    const ms = nowDate.getMilliseconds() / 1000;
-    const min = (nowDate.getSeconds() + ms) / 60;
-    const hour = (nowDate.getMinutes() + min) / 60;
-    const day = (nowDate.getHours() + hour) / 24;
-    const week = (nowDate.getDay() + day) / 7;
-    const month = (nowDate.getDate() - 1 + day) / new Date(nowDate.getFullYear(), nowDate.getMonth() + 1, 0).getDate();
+	}
+	
+	const ms = nowDate.getMilliseconds() / 1000;
+	const min = (nowDate.getSeconds() + ms) / 60;
+	const hour = (nowDate.getMinutes() + min) / 60;
+	const day = (nowDate.getHours() + hour) / 24;
+	const week = (nowDate.getDay() + day) / 7;
+	const month = (nowDate.getDate() - 1 + day) / new Date(nowDate.getFullYear(), nowDate.getMonth() + 1, 0).getDate();
 
-    let yearDay = 0;
-    for (let i = 0; i < nowDate.getMonth(); i++) {
-        yearDay += new Date(nowDate.getFullYear(), i + 1, 0).getDate();
-    }
-    const year = (yearDay + nowDate.getDate() - 1 + day) / getDaysLeapYear(nowDate.getFullYear());
-    
-    const startDate = new Date((Math.floor((nowDate.getFullYear() + 99) / 100) - 1) * 100 + 1, 1, 1);
-    const ds = nowDate.getTime() - startDate;
-    const centDays = ds / 1000 / 60 / 60 / 24;
-    const century = centDays / getDaysCentury(Math.floor((nowDate.getFullYear() + 99) / 100));
+	let yearDay = 0;
+	for (let i = 0; i < nowDate.getMonth(); i++) {
+		yearDay += new Date(nowDate.getFullYear(), i + 1, 0).getDate();
+	}
+	const year = (yearDay + nowDate.getDate() - 1 + day) / getDaysLeapYear(nowDate.getFullYear());
+	
+	const startDate = new Date((Math.floor((nowDate.getFullYear() + 99) / 100) - 1) * 100 + 1, 1, 1);
+	const ds = nowDate.getTime() - startDate;
+	const centDays = ds / 1000 / 60 / 60 / 24;
+	const century = centDays / getDaysCentury(Math.floor((nowDate.getFullYear() + 99) / 100));
 
-    setValue('minute', min);
-    setValue('hour', hour);
-    setValue('day', day);
-    setValue('week', week);
-    setValue('month', month);
-    setValue('year', year);
-    setValue('century', century);
+	setValue('minute', min);
+	setValue('hour', hour);
+	setValue('day', day);
+	setValue('week', week);
+	setValue('month', month);
+	setValue('year', year);
+	setValue('century', century);
 
 	setTimeout(clock, updateFreq);
 };
 
 (() => {
-    'use strict';
+	'use strict';
 	getDateOffset();
 })();
 $(() => {
-    'use strict';
-    clock();
+	'use strict';
+	clock();
 });
 
 $('#ok-btn').on('click', function () {
-    updateFreq = $('#update-freq').val();
+	updateFreq = $('#update-freq').val();
+});
+
+$('#dark-switch').on('change', function () {
+	$('body').toggleClass('bg-dark');
+	$('h1, h3, p, .col-md-1').toggleClass('text-light');
+	$('.progress').toggleClass('bg-secondary');
 });
