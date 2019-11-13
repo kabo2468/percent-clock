@@ -1,4 +1,4 @@
-let dateDiff, updateOffset, nowDate, updateFreq = 500;
+let dateDiff, nowDate, updateFreq = 500;
 const formatDate = date => {
 	'use strict';
 	const y = date.getFullYear();
@@ -36,7 +36,6 @@ const getDateOffset = () => {
 		.fail(function() {
 			dateDiff = 0;
 		});
-	updateOffset = true;
 };
 const setValue = (id, val) => {
 	$(`#${id}`).attr('aria-valuenow', val * 100);
@@ -50,14 +49,6 @@ const clock = () => {
 
 	if (dateDiff !== undefined) {
 		$('#now-clock-text').html(formatDate(nowDate));
-	}
-
-	if (nowDate.getSeconds() === 30) {
-		if (updateOffset === false) {
-			getDateOffset();
-		}
-	} else {
-		updateOffset = false;
 	}
 	
 	const ms = nowDate.getMilliseconds() / 1000;
@@ -92,6 +83,7 @@ const clock = () => {
 (() => {
 	'use strict';
 	getDateOffset();
+	setInterval(getDateOffset, 1000 * 60);
 })();
 $(() => {
 	'use strict';
