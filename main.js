@@ -1,4 +1,4 @@
-let dateDiff, nowDate, updateFreq = 500;
+let dateDiff = 0, nowDate, updateFreq = 500, isCompact = true;
 const formatDate = date => {
 	'use strict';
 	const y = date.getFullYear();
@@ -32,15 +32,16 @@ const getDateOffset = () => {
 	})
 		.done(function(res) {
 			dateDiff = res.st * 1000 + (localDate - res.it * 1000) / 2 - localDate;
-		})
-		.fail(function() {
-			dateDiff = 0;
 		});
 };
 const setValue = (id, val) => {
 	$(`#${id}`).attr('aria-valuenow', val * 100);
 	$(`#${id}`).css('width', `${val * 100}%`);
-	$(`#${id}`).text(`${(val * 100).toFixed(2)} %`);
+	if (isCompact) {
+		$(`#${id}`).text(`${(val * 100).toFixed(2)} %`);
+	} else {
+		$(`#${id}`).text(`${val * 100} %`);
+	}
 };
 // ループ
 const clock = () => {
@@ -98,4 +99,8 @@ $('#dark-switch').on('change', function () {
 	$('body').toggleClass('bg-dark');
 	$('h1, h3, p, .col-md-1').toggleClass('text-light');
 	$('.progress').toggleClass('bg-secondary');
+});
+
+$('#compact-switch').on('change', function () {
+	isCompact = !isCompact;
 });
