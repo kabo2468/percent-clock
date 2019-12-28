@@ -1,4 +1,4 @@
-let dateDiff = 0, nowDate, updateFreq = 500, isCompact = true;
+let dateDiff = 0, nowDate, updateFreq = 500, isCompact = true, isCountdown = false;
 const formatDate = date => {
 	'use strict';
 	const y = date.getFullYear();
@@ -35,12 +35,13 @@ const getDateOffset = () => {
 		});
 };
 const setValue = (id, val) => {
-	$(`#${id}`).attr('aria-valuenow', val * 100);
-	$(`#${id}`).css('width', `${val * 100}%`);
+	const _v = isCountdown ? 1 - val : val;
+	$(`#${id}`).attr('aria-valuenow', _v * 100);
+	$(`#${id}`).css('width', `${_v * 100}%`);
 	if (isCompact) {
-		$(`#${id}`).text(`${(val * 100).toFixed(2)} %`);
+		$(`#${id}`).text(`${(_v * 100).toFixed(2)} %`);
 	} else {
-		$(`#${id}`).text(`${val * 100} %`);
+		$(`#${id}`).text(`${_v * 100} %`);
 	}
 };
 // ループ
@@ -103,4 +104,8 @@ $('#dark-switch').on('change', function () {
 
 $('#compact-switch').on('change', function () {
 	isCompact = !isCompact;
+});
+
+$('#countdown-switch').on('change', function () {
+	isCountdown = !isCountdown;
 });
